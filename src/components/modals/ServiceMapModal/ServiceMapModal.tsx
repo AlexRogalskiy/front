@@ -783,6 +783,7 @@ export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({
                   {
                     selectedNodes.length > 0 && selectedNodes.map(id => {
                       const node = graphData.nodes[id];
+                      if (!node) return <></>;
                       let namespaceFlag = "";
                       if (node.verb !== NodeTypes.Namespace) namespaceFlag = "-n";
                       return <div key={id}>
