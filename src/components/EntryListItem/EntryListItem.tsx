@@ -100,7 +100,7 @@ export const EntryItem: React.FC<EntryProps> = ({ id, stream, entry, style, head
         <Summary method={entry.method} methodQuery={entry.methodQuery} summary={entry.summary} summaryQuery={entry.summaryQuery} />
         <div className={styles.resolvedName}>
           <Queryable
-            query={`src.name == "${entry.src.name} and src.namespace == "${entry.src.namespace}"`}
+            query={`src.name == "${entry.src.name}" and src.namespace == "${entry.src.namespace}"`}
             displayIconOnMouseOver={true}
             flipped={true}
             style={{ marginTop: "-4px", overflow: "visible" }}
