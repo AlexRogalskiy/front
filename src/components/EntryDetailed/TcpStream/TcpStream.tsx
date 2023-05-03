@@ -10,6 +10,7 @@ import { Node } from "../../EntryListItem/Entry";
 interface EntryProps {
   index: number;
   stream: string;
+  context: string;
   worker: string;
   node: Node;
   color: string;
@@ -18,7 +19,7 @@ interface EntryProps {
   layer4: string;
 }
 
-export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, color, ip, port, layer4 }) => {
+export const TcpStream: React.FC<EntryProps> = ({ index, stream, context, worker, node, color, ip, port, layer4 }) => {
 
   const { width } = useWindowDimensions();
   const { tcpStream, indexText, nodeText, tcpReplay, downloadPcap } = useTcpStreamTextsByWidth(width, layer4)
@@ -40,7 +41,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
         >
           <a
             style={{ textDecoration: "none" }}
-            href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}`}
+            href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}?c=${encodeURIComponent(context)}`}
           >
             <span
               style={{ color: color }}
@@ -66,7 +67,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
         >
           <a
             style={{ textDecoration: "none" }}
-            href={`${HubBaseUrl}/item/${worker}/${stream}-${index}?field=data`}
+            href={`${HubBaseUrl}/item/${worker}/${stream}-${index}?field=data&c=${encodeURIComponent(context)}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -107,6 +108,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
           node={node.name}
           tcpReplay={tcpReplay}
           stream={stream}
+          context={context}
           worker={worker}
           ip={ip}
           port={port}
@@ -121,7 +123,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
           style={{
             backgroundColor: color,
           }}
-          href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}`}
+          href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}?c=${encodeURIComponent(context)}`}
           title={`Download this ${layer4} stream in PCAP format: ${stream}`}
         >
           {downloadPcap}

@@ -7,6 +7,7 @@ import Queryable from "../UI/Queryable/Queryable";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from "recoil";
 import focusedItemAtom from "../../recoil/focusedItem";
+import focusedContextAtom from "../../recoil/focusedContext";
 import queryAtom from "../../recoil/query";
 import useWindowDimensions, { useRequestTextByWidth } from "../../hooks/WindowDimensionsHook";
 import entryDataAtom from "../../recoil/entryData";
@@ -50,7 +51,7 @@ interface EntryTitleProps {
   elapsedTime: number;
 }
 
-export const formatSize = (n: number): string => n > 1000 ? `${Math.round(n / 1000)}KB` : `${n} B`;
+export const formatSize = (n: number): string => n > 1000 ? `${Math.round(n / 1000)}kB` : `${n}B`;
 const minSizeDisplayRequestSize = 880;
 const EntryTitle: React.FC<EntryTitleProps> = ({ protocol, data, elapsedTime }) => {
   const classes = useStyles();
@@ -110,8 +111,6 @@ interface EntrySummaryProps {
 const EntrySummary: React.FC<EntrySummaryProps> = ({ entry }) => {
   return <EntryItem
     key={entry.id}
-    id={entry.id}
-    stream={entry.stream}
     entry={entry}
     style={{}}
     headingMode={true}
@@ -124,6 +123,7 @@ const EntrySummary: React.FC<EntrySummaryProps> = ({ entry }) => {
 export const EntryDetailed: React.FC = () => {
 
   const focusedItem = useRecoilValue(focusedItemAtom);
+  const focusedContext = useRecoilValue(focusedContextAtom);
   const query = useRecoilValue(queryAtom);
   const [isLoading, setIsLoading] = useState(false);
   const [entryData, setEntryData] = useRecoilState(entryDataAtom)
@@ -131,8 +131,9 @@ export const EntryDetailed: React.FC = () => {
   useEffect(() => {
     setEntryData(null);
     if (!focusedItem) return;
+    if (!focusedContext) return;
     setIsLoading(true);
-    fetch(`${HubBaseUrl}/item/${focusedItem}?q=${encodeURIComponent(query)}`)
+    fetch(`${HubBaseUrl}/item/${focusedItem}?q=${encodeURIComponent(query)}&c=${encodeURIComponent(focusedContext)}`)
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
       .then(response => response.json())
       .then(data => setEntryData(data))
@@ -144,7 +145,7 @@ export const EntryDetailed: React.FC = () => {
       })
       .finally(() => setIsLoading(false));
     // eslint-disable-next-line
-  }, [focusedItem]);
+  }, [focusedItem, focusedContext]);
 
   return <LoadingWrapper isLoading={isLoading} loaderMargin={50} loaderHeight={60}>
     {entryData && <React.Fragment>
@@ -153,6 +154,7 @@ export const EntryDetailed: React.FC = () => {
       <TcpStream
         index={entryData.data.index}
         stream={entryData.data.stream}
+        context={entryData.data.context}
         worker={entryData.data.worker}
         node={entryData.data.node}
         color={entryData.protocol.backgroundColor}

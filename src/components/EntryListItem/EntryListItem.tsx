@@ -13,26 +13,26 @@ import ingoingIconNeutral from "./assets/ingoing-traffic-neutral.svg"
 import outgoingIconSuccess from "./assets/outgoing-traffic-success.svg"
 import outgoingIconFailure from "./assets/outgoing-traffic-failure.svg"
 import outgoingIconNeutral from "./assets/outgoing-traffic-neutral.svg"
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import focusedItemAtom from "../../recoil/focusedItem";
 import focusedStreamAtom from "../../recoil/focusedStream";
+import focusedContextAtom from "../../recoil/focusedContext";
 import { Entry } from "./Entry";
 import { ColorGreen, ColorRed, ColorWhite } from "../../consts";
 
 interface EntryProps {
-  id: string;
-  stream: string;
   entry: Entry;
   style: unknown;
   headingMode: boolean;
   namespace?: string;
 }
 
-export const EntryItem: React.FC<EntryProps> = ({ id, stream, entry, style, headingMode, namespace }) => {
+export const EntryItem: React.FC<EntryProps> = ({ entry, style, headingMode, namespace }) => {
   const [focusedItem, setFocusedItem] = useRecoilState(focusedItemAtom);
   const [focusedStream, setFocusedStream] = useRecoilState(focusedStreamAtom);
-  const isSelected = focusedItem === id;
-  const isTcpSelected = focusedStream === stream;
+  const setFocusedContext = useSetRecoilState(focusedContextAtom);
+  const isSelected = focusedItem === entry.id;
+  const isTcpSelected = focusedStream === entry.stream;
 
   const classification = getClassification(entry.status)
   let ingoingIcon;
@@ -63,12 +63,13 @@ export const EntryItem: React.FC<EntryProps> = ({ id, stream, entry, style, head
 
   return <React.Fragment>
     <div
-      id={id}
+      id={entry.id}
       className={`${styles.row} ${isSelected ? styles.rowSelected : ""}`}
       onClick={() => {
         if (!setFocusedItem) return;
-        setFocusedItem(id);
-        setFocusedStream(stream);
+        setFocusedItem(entry.id);
+        setFocusedStream(entry.stream);
+        setFocusedContext(entry.context)
       }}
       style={{
         border: isSelected && !headingMode ? `1px ${entry.proto.backgroundColor} ${borderStyle}` : `1px ${transparentBorder} ${borderStyle}`,

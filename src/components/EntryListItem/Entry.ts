@@ -23,6 +23,7 @@ export interface Entry {
   id: string;
   index?: number;
   stream: string;
+  context: string;
   node: Node;
   worker: string;
   proto: ProtocolInterface;

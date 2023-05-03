@@ -17,13 +17,14 @@ export interface TcpReplayDialogProps {
   node: string;
   tcpReplay: string;
   stream: string;
+  context: string;
   worker: string;
   ip: string;
   port: string;
   layer4: string;
 }
 
-export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, tcpReplay, stream, worker, ip, port, layer4 }) => {
+export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, tcpReplay, stream, context, worker, ip, port, layer4 }) => {
   const [open, setOpen] = React.useState(false);
   const [count, setCount] = React.useState("1");
   const [delay, setDelay] = React.useState("100");
@@ -31,7 +32,7 @@ export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, t
 
   const replayTcpStream = () => {
     setOpen(false);
-    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}&host=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}&concurrent=${!!concurrent}`)
+    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?c=${encodeURIComponent(context)}&count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}&host=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}&concurrent=${!!concurrent}`)
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
       .then(response => {
         if (response.status === 200) {

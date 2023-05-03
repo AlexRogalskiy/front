@@ -113,6 +113,7 @@ interface Pcaps {
 
 interface DownloadPcapRequest {
   query: string;
+  context: string;
   pcaps: Pcaps;
 }
 
@@ -139,10 +140,11 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
   }
 
   const downloadPcapSnapshot = () => {
-    const obj: DownloadPcapRequest = {query: query, pcaps: {}};
+    const obj: DownloadPcapRequest = {query: query, pcaps: {}, context: ""};
     obj.query = query
     for (const entry of entries) {
       if (!obj.pcaps[entry.worker]) obj.pcaps[entry.worker] = []
+      if (!obj.context) obj.context = entry.context;
       obj.pcaps[entry.worker].push(entry.stream);
     }
 

@@ -11,6 +11,7 @@ import variables from '../../variables.module.scss';
 import { useRecoilState, useSetRecoilState } from "recoil";
 import focusedItemAtom from "../../recoil/focusedItem";
 import focusedStreamAtom from "../../recoil/focusedStream";
+import focusedContextAtom from "../../recoil/focusedContext";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
 import { useInterval } from "../../helpers/interval";
 import queryAtom from "../../recoil/query";
@@ -56,6 +57,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
   const classes = useLayoutStyles();
   const setFocusedItem = useSetRecoilState(focusedItemAtom);
   const setFocusedStream = useSetRecoilState(focusedStreamAtom);
+  const setFocusedContext = useSetRecoilState(focusedContextAtom);
   const [query, setQuery] = useRecoilState(queryAtom);
   const setQueryBuild = useSetRecoilState(queryBuildAtom);
   const setQueryBackgroundColor = useSetRecoilState(queryBackgroundColorAtom);
@@ -106,6 +108,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
   const listEntry = useRef(null);
   const openWebSocket = () => {
     setFocusedItem(null);
+    setFocusedContext(null);
     entriesBuffer.current.length = 0;
     setEntries([]);
     setLastUpdated(Date.now());
@@ -241,6 +244,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
       if (entriesBuffer.current.length === 0) {
         setFocusedItem(entry.id);
         setFocusedStream(entry.stream);
+        setFocusedContext(entry.context);
       }
 
       entry.key = `${Date().valueOf()}-${entry.id}`;

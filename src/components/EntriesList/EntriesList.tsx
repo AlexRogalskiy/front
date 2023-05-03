@@ -25,15 +25,15 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   setIsSnappedToBottom,
   scrollableRef,
 }) => {
-  const [totalTcpStreams, setTotalTcpStreams] = useState(0);
+  const [totalSize, setTotalSize] = useState("0B");
 
   const [timeNow, setTimeNow] = useState(new Date());
 
   useInterval(async () => {
-    fetch(`${HubBaseUrl}/pcaps/total-tcp-streams`)
+    fetch(`${HubBaseUrl}/pcaps/total-size`)
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
       .then(response => response.json())
-      .then(data => setTotalTcpStreams(data.total))
+      .then(data => setTotalSize(data.total))
       .catch(err => {
         console.error(err);
       });
@@ -55,8 +55,6 @@ export const EntriesList: React.FC<EntriesListProps> = ({
           {memoizedEntries.map(entry => {
             return <EntryItem
               key={entry.key}
-              id={entry.id}
-              stream={entry.stream}
               entry={entry}
               style={{}}
               headingMode={false}
@@ -76,7 +74,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
 
       <div className={styles.footer}>
         <div>Showing <b id="item-count">{entries.length}</b> items from a total of <b
-          id="total-tcp-streams">{totalTcpStreams}</b> TCP/UDP streams
+          id="total-tcp-streams">{totalSize}</b> traffic capture
         </div>
         <div>
           UTC:
