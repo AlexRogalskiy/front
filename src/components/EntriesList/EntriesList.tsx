@@ -131,7 +131,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {"You've enabled feature" + (enabledFeatures.length > 1 ? "s" : "") + ": "}
-            <b>{enabledFeatures.join(",")}</b>
+            <b>{enabledFeatures.join(", ")}</b>
             {" which require" + (enabledFeatures.length > 1 ? "" : "s") + " a Pro license."}
             {" Please visit the "}
             <Link href="https://kubeshark.co/pricing" underline="hover" target="_blank">pricing page</Link>
