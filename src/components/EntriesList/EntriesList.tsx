@@ -18,6 +18,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import {
   Link,
 } from "@mui/material";
+import { SyntaxHighlighter } from "../UI/SyntaxHighlighter";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -127,23 +128,28 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         onClose={handleCloseLicenseRequiredDialog}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Pro License Required!"}</DialogTitle>
+        <DialogTitle>{"PRO Version Required!"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {"You've enabled feature" + (enabledFeatures.length > 1 ? "s" : "") + ": "}
             <b>{enabledFeatures.join(", ")}</b>
-            {" which require" + (enabledFeatures.length > 1 ? "" : "s") + " a Pro license."}
-            {" Please visit the "}
-            <Link href="https://kubeshark.co/pricing" underline="hover" target="_blank">pricing page</Link>
-            {" to upgrade."}
+            {(enabledFeatures.length > 1 ? " are" : " is") + " only available in the PRO version. Upgrade now by using:"}
+            <SyntaxHighlighter
+              showLineNumbers={false}
+              code={`kubeshark pro`}
+              language="bash"
+            />
+            {"or read more about it "}
+            <Link href="https://kubeshark.co/pricing" underline="hover" target="_blank">here</Link>
+            {"."}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
             variant="contained"
-            href="https://kubeshark.co/pricing"
+            onClick={handleCloseLicenseRequiredDialog}
+            style={{ margin: 10 }}
           >
-            UPGRADE
+            OK
           </Button>
         </DialogActions>
       </Dialog>
