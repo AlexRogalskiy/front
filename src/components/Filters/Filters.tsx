@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import styles from './Filters.module.sass';
-import { Button, Grid, Modal, Box, Typography, Backdrop, Fade, Divider, debounce } from "@mui/material";
+import { Button, Grid, Modal, Box, Typography, Backdrop, Fade, Divider, debounce, Link } from "@mui/material";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import SaveIcon from '@mui/icons-material/Save';
@@ -396,7 +396,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
           </Grid>
           <br></br>
           <Typography id="modal-modal-description" style={{ fontSize: 12, fontStyle: 'italic' }}>
-            Please refer to <a href="https://docs.kubeshark.co/en/filtering#kfl-syntax-reference"><b>KFL Syntax Reference</b></a> for more information.&nbsp;
+            Please refer to <Link href="https://docs.kubeshark.co/en/filtering#kfl-syntax-reference" underline="hover" target="_blank"><b>KFL Syntax Reference</b></Link> for more information.&nbsp;
             <a className="kbc-button kbc-button-xxs">Ctrl</a> + <a className="kbc-button kbc-button-xxs">Enter</a> keyboard shortcut applies the filter.
           </Typography>
         </Box>

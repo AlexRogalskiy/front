@@ -7,6 +7,26 @@ import { useInterval } from "../../helpers/interval";
 import { EntryItem } from "../EntryListItem/EntryListItem";
 import { HubBaseUrl } from "../../consts";
 import { Entry } from "../EntryListItem/Entry";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
+import {
+  Link,
+} from "@mui/material";
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<unknown, string>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 interface EntriesListProps {
   entries: Entry[];
@@ -29,13 +49,24 @@ export const EntriesList: React.FC<EntriesListProps> = ({
 
   const [timeNow, setTimeNow] = useState(new Date());
 
+  const [openLicenseRequiredDialog, setOpenLicenseRequiredDialog] = React.useState(false);
+  const [enabledFeatures, setEnabledFeatures] = React.useState([]);
+
+  const handleCloseLicenseRequiredDialog = () => {
+    setOpenLicenseRequiredDialog(false);
+  };
+
   useInterval(async () => {
     fetch(`${HubBaseUrl}/pcaps/total-size`)
-      .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
+      .then(response => response.ok ? response : response.json().then(err => Promise.reject(err)))
       .then(response => response.json())
       .then(data => setTotalSize(data.total))
       .catch(err => {
         console.error(err);
+        if (err.EnabledFeatures.length > 0) {
+          setOpenLicenseRequiredDialog(true);
+          setEnabledFeatures(err.EnabledFeatures);
+        }
       });
   }, 3000, true);
 
@@ -87,6 +118,35 @@ export const EntriesList: React.FC<EntriesListProps> = ({
           </span>
         </div>
       </div>
+    </div>
+    <div>
+      <Dialog
+        open={openLicenseRequiredDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseLicenseRequiredDialog}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Pro License Required!"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {"You've enabled feature" + (enabledFeatures.length > 1 ? "s" : "") + ": "}
+            <b>{enabledFeatures.join(",")}</b>
+            {" which require" + (enabledFeatures.length > 1 ? "" : "s") + " a Pro license."}
+            {" Please visit the "}
+            <Link href="https://kubeshark.co/pricing" underline="hover" target="_blank">pricing page</Link>
+            {" to upgrade."}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            href="https://kubeshark.co/pricing"
+          >
+            UPGRADE
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   </React.Fragment>;
 };
