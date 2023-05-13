@@ -136,7 +136,10 @@ export const EntryDetailed: React.FC = () => {
     fetch(`${HubBaseUrl}/item/${focusedItem}?q=${encodeURIComponent(query)}&c=${encodeURIComponent(focusedContext)}`)
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
       .then(response => response.json())
-      .then(data => setEntryData(data))
+      .then(data => {
+        data.base.context = focusedContext;
+        setEntryData(data);
+      })
       .catch(err => {
         console.error(err);
         toast.error(err.toString(), {
@@ -154,7 +157,7 @@ export const EntryDetailed: React.FC = () => {
       <TcpStream
         index={entryData.data.index}
         stream={entryData.data.stream}
-        context={entryData.data.context}
+        context={entryData.base.context}
         worker={entryData.data.worker}
         node={entryData.data.node}
         color={entryData.protocol.backgroundColor}
