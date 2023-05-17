@@ -44,8 +44,8 @@ function onItemCaptured(data) {
 
     // Send a detailed Slack message with 2 attached files
     vendor.slackBot(
-      SLACK_AUTH_TOKEN,
-      SLACK_CHANNEL_ID,
+      env.SLACK_AUTH_TOKEN,
+      env.SLACK_CHANNEL_ID,
       "Server-side Error in Kubernetes Cluster",                                    // Pretext
       "An HTTP request resulted with " + data.response.status + " status code:",    // Text
       "#ff0000",                                                                    // Color
