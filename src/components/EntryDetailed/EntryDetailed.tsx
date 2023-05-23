@@ -15,6 +15,7 @@ import { LoadingWrapper } from "../UI/withLoading/withLoading";
 import { HubBaseUrl } from "../../consts";
 import { Entry } from "../EntryListItem/Entry";
 import { TcpStream } from "./TcpStream/TcpStream";
+import { getSessionToken, getRefreshToken } from '@descope/react-sdk';
 
 const useStyles = makeStyles(() => ({
   entryTitle: {
@@ -133,7 +134,11 @@ export const EntryDetailed: React.FC = () => {
     if (!focusedItem) return;
     if (!focusedContext) return;
     setIsLoading(true);
-    fetch(`${HubBaseUrl}/item/${focusedItem}?q=${encodeURIComponent(query)}&c=${encodeURIComponent(focusedContext)}`)
+    fetch(`${HubBaseUrl}/item/${focusedItem}?q=${encodeURIComponent(query)}&c=${encodeURIComponent(focusedContext)}&refresh-token=${encodeURIComponent(getRefreshToken())}`, {
+      headers: {
+        Authorization: getSessionToken(),
+      },
+    })
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
       .then(response => response.json())
       .then(data => {

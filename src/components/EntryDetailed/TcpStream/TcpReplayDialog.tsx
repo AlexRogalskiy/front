@@ -11,6 +11,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import styles from './TcpStream.module.sass';
 import { toast } from "react-toastify";
 import { HubBaseUrl } from "../../../consts";
+import { getSessionToken, getRefreshToken } from '@descope/react-sdk';
 
 export interface TcpReplayDialogProps {
   color: string;
@@ -32,7 +33,11 @@ export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, t
 
   const replayTcpStream = () => {
     setOpen(false);
-    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?c=${encodeURIComponent(context)}&count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}&host=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}&concurrent=${!!concurrent}`)
+    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?c=${encodeURIComponent(context)}&count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}&host=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}&concurrent=${!!concurrent}&refresh-token=${encodeURIComponent(getRefreshToken())}`, {
+      headers: {
+        Authorization: getSessionToken(),
+      },
+    })
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
       .then(response => {
         if (response.status === 200) {

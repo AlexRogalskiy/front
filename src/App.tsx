@@ -13,6 +13,7 @@ import { JobsModal } from './components/modals/JobsModal/JobsModal';
 import { Entry } from "./components/EntryListItem/Entry";
 import { HubBaseUrl } from "./consts";
 import { toast } from "react-toastify";
+import { AuthProvider } from '@descope/react-sdk';
 
 const App: React.FC = () => {
 
@@ -52,42 +53,45 @@ const App: React.FC = () => {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={createTheme(({}))}>
-        <div className="kubesharkApp">
-          <Header
-            licenseEdition={licenseEdition}
-            licenseExpired={licenseExpired}
-            licenseEnd={licenseEnd}
-            licenseCurrentNodeCount={licenseCurrentNodeCount}
-            licenseNodeLimit={licenseNodeLimit}
-          />
-          <TrafficPage
-            entries={entries}
-            setEntries={setEntries}
-            setLastUpdated={setLastUpdated}
-            getLicense={getLicense}
-          />
-          {serviceMapModalOpen && <ServiceMapModal
-            entries={entries}
-            lastUpdated={lastUpdated}
-            setLastUpdated={setLastUpdated}
-            isOpen={serviceMapModalOpen}
-            onClose={() => setServiceMapModalOpen(false)}
-            edgeType={edgeType}
-            setEdgeType={setEdgeType}
-            nodeType={nodeType}
-            setNodeType={setNodeType}
-          />}
-          {scriptingModalOpen && <ScriptingModal
-            isOpen={scriptingModalOpen}
-            onClose={() => setScriptingModalOpen(false)}
-          />}
-          {jobsModalOpen && <JobsModal
-            isOpen={jobsModalOpen}
-            onClose={() => setJobsModalOpen(false)}
-          />}
-        </div>
-      </ThemeProvider>
+      {/* The code below includes your Project ID (P2PyftOipp2EcXXRyivNwlJkUMHm) */}
+      <AuthProvider projectId="P2PyftOipp2EcXXRyivNwlJkUMHm">
+        <ThemeProvider theme={createTheme(({}))}>
+          <div className="kubesharkApp">
+            <Header
+              licenseEdition={licenseEdition}
+              licenseExpired={licenseExpired}
+              licenseEnd={licenseEnd}
+              licenseCurrentNodeCount={licenseCurrentNodeCount}
+              licenseNodeLimit={licenseNodeLimit}
+            />
+            <TrafficPage
+              entries={entries}
+              setEntries={setEntries}
+              setLastUpdated={setLastUpdated}
+              getLicense={getLicense}
+            />
+            {serviceMapModalOpen && <ServiceMapModal
+              entries={entries}
+              lastUpdated={lastUpdated}
+              setLastUpdated={setLastUpdated}
+              isOpen={serviceMapModalOpen}
+              onClose={() => setServiceMapModalOpen(false)}
+              edgeType={edgeType}
+              setEdgeType={setEdgeType}
+              nodeType={nodeType}
+              setNodeType={setNodeType}
+            />}
+            {scriptingModalOpen && <ScriptingModal
+              isOpen={scriptingModalOpen}
+              onClose={() => setScriptingModalOpen(false)}
+            />}
+            {jobsModalOpen && <JobsModal
+              isOpen={jobsModalOpen}
+              onClose={() => setJobsModalOpen(false)}
+            />}
+          </div>
+        </ThemeProvider>
+      </AuthProvider>
     </StyledEngineProvider>
   );
 }

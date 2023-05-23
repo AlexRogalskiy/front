@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { HubWsUrl, ColorYellow } from "../../consts"
 import { Entry } from "../EntryListItem/Entry";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { getSessionToken, getRefreshToken } from '@descope/react-sdk';
 
 const useLayoutStyles = makeStyles(() => ({
   details: {
@@ -116,7 +117,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
     let timer;
 
     try {
-      ws.current = new WebSocket(HubWsUrl);
+      ws.current = new WebSocket(`${HubWsUrl}?session-token=${encodeURIComponent(getSessionToken())}&refresh-token=${encodeURIComponent(getRefreshToken())}`);
       sendQueryWhenWsOpen();
 
       ws.current.onopen = () => {

@@ -18,6 +18,7 @@ import { HubBaseUrl, ColorGreen, ColorRed, ColorWhite } from "../../consts";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Entry } from "../EntryListItem/Entry";
 import FileSaver from 'file-saver';
+import { getSessionToken, getRefreshToken } from '@descope/react-sdk';
 
 interface CodeEditorWrap {
   reopenConnection?: () => void;
@@ -67,7 +68,11 @@ export const CodeEditorWrap: FC<CodeEditorWrap> = ({ onQueryChange, onValidation
           setQueryBackgroundColor(ColorWhite);
           onValidationChanged && onValidationChanged({ query: query, message: "", valid: true });
         } else {
-          fetch(`${HubBaseUrl}/query/validate?q=${encodeURIComponent(query)}`)
+          fetch(`${HubBaseUrl}/query/validate?q=${encodeURIComponent(query)}&refresh-token=${encodeURIComponent(getRefreshToken())}`, {
+            headers: {
+              Authorization: getSessionToken(),
+            },
+          })
             .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
             .then(response => response.json())
             .then(data => {
@@ -149,11 +154,12 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
     }
 
     fetch(
-      `${HubBaseUrl}/pcaps/merge`,
+      `${HubBaseUrl}/pcaps/merge?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: getSessionToken(),
         },
         body: JSON.stringify(obj)
       },

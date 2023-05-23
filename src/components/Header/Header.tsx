@@ -24,6 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ licenseEdition, licenseExpired, 
     </div>
     <div style={{ display: "flex", alignItems: "center" }}>
       <UI.InformationIcon />
+      <UI.Logout />
     </div>
   </div>;
 }

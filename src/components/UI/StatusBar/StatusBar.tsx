@@ -2,6 +2,7 @@ import style from './StatusBar.module.sass';
 import React, { useState } from "react";
 import { useInterval } from "../../../helpers/interval";
 import { HubBaseUrl } from "../../../consts";
+import { getSessionToken, getRefreshToken } from '@descope/react-sdk';
 
 const pluralize = (noun: string, amount: number) => {
   return `${noun}${amount !== 1 ? 's' : ''}`
@@ -57,7 +58,11 @@ export const StatusBar: React.FC = () => {
   const [targets, setTargets] = useState<Target[]>([]);
 
   useInterval(async () => {
-    fetch(`${HubBaseUrl}/pods/targeted`)
+    fetch(`${HubBaseUrl}/pods/targeted?refresh-token=${encodeURIComponent(getRefreshToken())}`, {
+      headers: {
+        Authorization: getSessionToken(),
+      },
+    })
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
       .then(response => response.json())
       .then(data => setTargets(data.targets))

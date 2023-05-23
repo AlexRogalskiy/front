@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import useKeyPress from "../../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../../configs/shortcutsKeyboard"
 import { useInterval } from "../../../helpers/interval";
+import { getSessionToken, getRefreshToken } from '@descope/react-sdk';
 
 const modalStyle = {
   position: 'absolute',
@@ -49,9 +50,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickRunJob = () => {
     fetch(
-      `${HubBaseUrl}/jobs/${job.worker}/run/${job.tag}`,
+      `${HubBaseUrl}/jobs/${job.worker}/run/${job.tag}?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'POST',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
@@ -66,9 +70,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickDeleteJob = () => {
     fetch(
-      `${HubBaseUrl}/jobs/${job.worker}/${job.tag}`,
+      `${HubBaseUrl}/jobs/${job.worker}/${job.tag}?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'DELETE',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
@@ -82,7 +89,11 @@ function TabPanel(props: TabPanelProps) {
   };
 
   const fetchScheduler = () => {
-    fetch(`${HubBaseUrl}/jobs/${job.worker}/scheduler/status`)
+    fetch(`${HubBaseUrl}/jobs/${job.worker}/scheduler/status?refresh-token=${encodeURIComponent(getRefreshToken())}`, {
+      headers: {
+        Authorization: getSessionToken(),
+      },
+    })
       .then(response => response.ok || response.status === 425 ? response : response.text().then(err => Promise.reject(err)))
       .then(response => response.json())
       .then((data) => {
@@ -98,9 +109,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickStartScheduler = () => {
     fetch(
-      `${HubBaseUrl}/jobs/${job.worker}/scheduler/start`,
+      `${HubBaseUrl}/jobs/${job.worker}/scheduler/start?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'POST',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok || response.status === 425 ? response : response.text().then(err => Promise.reject(err)))
@@ -115,9 +129,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickStopScheduler = () => {
     fetch(
-      `${HubBaseUrl}/jobs/${job.worker}/scheduler/stop`,
+      `${HubBaseUrl}/jobs/${job.worker}/scheduler/stop?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'POST',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok || response.status === 425 ? response : response.text().then(err => Promise.reject(err)))
@@ -132,9 +149,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickRunTag = () => {
     fetch(
-      `${HubBaseUrl}/jobs/workers/run/${job.tag}`,
+      `${HubBaseUrl}/jobs/workers/run/${job.tag}?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'POST',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
@@ -149,9 +169,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickDeleteTag = () => {
     fetch(
-      `${HubBaseUrl}/jobs/workers/${job.tag}`,
+      `${HubBaseUrl}/jobs/workers/${job.tag}?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'DELETE',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
@@ -166,9 +189,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickRunAllJobs = () => {
     fetch(
-      `${HubBaseUrl}/jobs/run`,
+      `${HubBaseUrl}/jobs/run?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'POST',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
@@ -183,9 +209,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickDeleteAllJobs = () => {
     fetch(
-      `${HubBaseUrl}/jobs`,
+      `${HubBaseUrl}/jobs?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'DELETE',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
@@ -404,7 +433,11 @@ export const JobsModal: React.FC<JobsModalProps> = ({ isOpen, onClose }) => {
   };
 
   const fetchJobs = () => {
-    fetch(`${HubBaseUrl}/jobs`)
+    fetch(`${HubBaseUrl}/jobs?refresh-token=${encodeURIComponent(getRefreshToken())}`, {
+      headers: {
+        Authorization: getSessionToken(),
+      },
+    })
       .then(response => response.ok || response.status === 425 ? response : response.text().then(err => Promise.reject(err)))
       .then(response => response.json())
       .then((data) => {

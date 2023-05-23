@@ -19,6 +19,7 @@ import {
   Link,
 } from "@mui/material";
 import { SyntaxHighlighter } from "../UI/SyntaxHighlighter";
+import { Descope, getSessionToken, getRefreshToken, useUser, useDescope } from '@descope/react-sdk';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -51,23 +52,66 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   const [timeNow, setTimeNow] = useState(new Date());
 
   const [openLicenseRequiredDialog, setOpenLicenseRequiredDialog] = React.useState(false);
+  const [openLogin, setOpenLogin] = React.useState(false);
+  const [openedLoginOnce, setOpenedLoginOnce] = React.useState(false);
+  const [openUnauthorizedDialog, setOpenUnauthorizedDialog] = React.useState(false);
   const [enabledFeatures, setEnabledFeatures] = React.useState([]);
+
+  const { user } = useUser();
+  const descopeSdk = useDescope();
 
   const handleCloseLicenseRequiredDialog = () => {
     setOpenLicenseRequiredDialog(false);
   };
 
+  const handleCloseLogin = () => {
+    setOpenLogin(false);
+  };
+
+  const handleCloseUnauthorizedDialog = async () => {
+    setOpenUnauthorizedDialog(false);
+    await descopeSdk.logout();
+    window.location.reload();
+  };
+
   useInterval(async () => {
-    fetch(`${HubBaseUrl}/pcaps/total-size`)
-      .then(response => response.ok ? response : response.json().then(err => Promise.reject(err)))
-      .then(response => response.json())
-      .then(data => setTotalSize(data.total))
+    let status: number;
+    fetch(`${HubBaseUrl}/pcaps/total-size?refresh-token=${encodeURIComponent(getRefreshToken())}`, {
+      headers: {
+        Authorization: getSessionToken(),
+      },
+    })
+      .then(response => {
+        status = response.status;
+        return response.json();
+      })
+      .then(data => {
+        switch (status) {
+        case 418:
+          setOpenLogin(false);
+          if (data.EnabledFeatures.length > 0) {
+            setOpenLicenseRequiredDialog(true);
+            setEnabledFeatures(data.EnabledFeatures);
+          }
+          break;
+        case 403:
+          setOpenLogin(true);
+          setOpenedLoginOnce(true);
+          break;
+        case 401:
+          if (openedLoginOnce)
+            setOpenUnauthorizedDialog(true);
+          else
+            setOpenLogin(true);
+          break;
+        default:
+          setOpenLogin(false);
+          setTotalSize(data.total);
+          break;
+        }
+      })
       .catch(err => {
         console.error(err);
-        if (err.EnabledFeatures.length > 0) {
-          setOpenLicenseRequiredDialog(true);
-          setEnabledFeatures(err.EnabledFeatures);
-        }
       });
   }, 3000, true);
 
@@ -147,6 +191,49 @@ export const EntriesList: React.FC<EntriesListProps> = ({
           <Button
             variant="contained"
             onClick={handleCloseLicenseRequiredDialog}
+            style={{ margin: 10 }}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openLogin}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseLogin}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <Descope
+          flowId="sign-up-or-in"
+          theme="light"
+          onSuccess={() => {
+            setOpenLogin(false);
+          }}
+          onError={(err: unknown) => {
+            console.error(err)
+          }}
+        />
+      </Dialog>
+
+      <Dialog
+        open={openUnauthorizedDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseUnauthorizedDialog}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Unauthorized Access!</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Your email <b>{user?.email}</b> is unauthorized for this cluster.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            onClick={handleCloseUnauthorizedDialog}
             style={{ margin: 10 }}
           >
             OK

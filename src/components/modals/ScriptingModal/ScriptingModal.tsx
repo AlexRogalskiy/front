@@ -25,8 +25,9 @@ import { LazyLog } from 'react-lazylog';
 import { toast } from "react-toastify";
 import { SelectChangeEvent } from '@mui/material/Select';
 import { DEFAULT_TITLE, DEFAULT_SCRIPT, EXAMPLE_SCRIPTS, EXAMPLE_SCRIPT_TITLES } from "./ScriptingExamples";
-import useKeyPress from "../../../hooks/useKeyPress"
-import shortcutsKeyboard from "../../../configs/shortcutsKeyboard"
+import useKeyPress from "../../../hooks/useKeyPress";
+import shortcutsKeyboard from "../../../configs/shortcutsKeyboard";
+import { getSessionToken, getRefreshToken } from '@descope/react-sdk';
 
 const modalStyle = {
   position: 'absolute',
@@ -63,11 +64,12 @@ function TabPanel(props: TabPanelProps) {
   const handleClickSaveScript = () => {
     const obj: Script = {title: title, code: code };
     fetch(
-      `${HubBaseUrl}/scripts/${scriptKey}`,
+      `${HubBaseUrl}/scripts/${scriptKey}?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: getSessionToken(),
         },
         body: JSON.stringify(obj)
       },
@@ -85,9 +87,12 @@ function TabPanel(props: TabPanelProps) {
 
   const handleClickDeleteScript = () => {
     fetch(
-      `${HubBaseUrl}/scripts/${scriptKey}`,
+      `${HubBaseUrl}/scripts/${scriptKey}?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'DELETE',
+        headers: {
+          Authorization: getSessionToken(),
+        },
       },
     )
       .then(response => response.ok ? response : response.text().then(err => Promise.reject(err)))
@@ -231,11 +236,12 @@ export const ScriptingModal: React.FC<ScriptingModalProps> = ({ isOpen, onClose 
   const handleClickAddScript = () => {
     const obj: Script = {title: DEFAULT_TITLE, code: DEFAULT_SCRIPT };
     fetch(
-      `${HubBaseUrl}/scripts`,
+      `${HubBaseUrl}/scripts?refresh-token=${encodeURIComponent(getRefreshToken())}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: getSessionToken(),
         },
         body: JSON.stringify(obj)
       },
@@ -252,7 +258,11 @@ export const ScriptingModal: React.FC<ScriptingModalProps> = ({ isOpen, onClose 
   };
 
   const fetchScripts = () => {
-    fetch(`${HubBaseUrl}/scripts`)
+    fetch(`${HubBaseUrl}/scripts?refresh-token=${encodeURIComponent(getRefreshToken())}`, {
+      headers: {
+        Authorization: getSessionToken(),
+      },
+    })
       .then((response) => {
         if (response.status === 425) {
           setTimeout(() => {
