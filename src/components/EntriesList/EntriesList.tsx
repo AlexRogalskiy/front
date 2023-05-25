@@ -55,7 +55,6 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   const [openLogin, setOpenLogin] = React.useState(false);
   const [openedLoginOnce, setOpenedLoginOnce] = React.useState(false);
   const [openUnauthorizedDialog, setOpenUnauthorizedDialog] = React.useState(false);
-  const [enabledFeatures, setEnabledFeatures] = React.useState([]);
 
   const { user } = useUser();
   const descopeSdk = useDescope();
@@ -91,7 +90,6 @@ export const EntriesList: React.FC<EntriesListProps> = ({
           setOpenLogin(false);
           if (data.EnabledFeatures.length > 0) {
             setOpenLicenseRequiredDialog(true);
-            setEnabledFeatures(data.EnabledFeatures);
           }
           break;
         case 403:
