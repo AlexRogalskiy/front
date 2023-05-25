@@ -170,16 +170,16 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         onClose={handleCloseLicenseRequiredDialog}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Oops something went wrong!"}</DialogTitle>
+        <DialogTitle>{"Oops... Something went wrong!"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {"Please try to install latest CLI version if you're a CLI user:"}
+            {"When using the CLI, many problems can be solved by installing the latest CLI version:"}
             <SyntaxHighlighter
               showLineNumbers={false}
               code={`sh <(curl -Ls https://kubeshark.co/install)`}
               language="bash"
             />
-            {" If the issue persists then please refer to "}
+            {" If the issue persists, please refer to the "}
             <Link href="https://docs.kubeshark.co/en/troubleshooting" underline="hover" target="_blank">troubleshooting</Link>
             {" page."}
           </DialogContentText>
