@@ -172,19 +172,18 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         onClose={handleCloseLicenseRequiredDialog}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"PRO Version Required!"}</DialogTitle>
+        <DialogTitle>{"Oops something went wrong!"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            <b>{enabledFeatures.join(", ")}</b>
-            {(enabledFeatures.length > 1 ? " are" : " is") + " only available in the PRO version. Upgrade now by using:"}
+            {"Please try to install latest CLI version if you're a CLI user:"}
             <SyntaxHighlighter
               showLineNumbers={false}
-              code={`kubeshark pro`}
+              code={`sh <(curl -Ls https://kubeshark.co/install)`}
               language="bash"
             />
-            {"or read more about it "}
-            <Link href="https://kubeshark.co/pricing" underline="hover" target="_blank">here</Link>
-            {"."}
+            {" If the issue persists then please refer to "}
+            <Link href="https://docs.kubeshark.co/en/troubleshooting" underline="hover" target="_blank">troubleshooting</Link>
+            {" page."}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
