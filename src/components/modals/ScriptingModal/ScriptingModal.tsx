@@ -375,7 +375,7 @@ export const ScriptingModal: React.FC<ScriptingModalProps> = ({ isOpen, onClose 
                     <LazyLog
                       extraLines={1}
                       enableSearch
-                      url={HubScriptLogsWsUrl}
+                      url={`${HubScriptLogsWsUrl}?session-token=${encodeURIComponent(getSessionToken())}&refresh-token=${encodeURIComponent(getRefreshToken())}`}
                       websocket
                       websocketOptions={{}}
                       stream

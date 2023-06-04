@@ -545,7 +545,7 @@ export const JobsModal: React.FC<JobsModalProps> = ({ isOpen, onClose }) => {
                     <LazyLog
                       extraLines={1}
                       enableSearch
-                      url={HubScriptLogsWsUrl}
+                      url={`${HubScriptLogsWsUrl}?session-token=${encodeURIComponent(getSessionToken())}&refresh-token=${encodeURIComponent(getRefreshToken())}`}
                       websocket
                       websocketOptions={{}}
                       stream
