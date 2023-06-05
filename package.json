@@ -28,7 +28,7 @@
     "sass": "^1.52.3"
   },
   "dependencies": {
-    "@descope/react-sdk": "^1.0.4",
+    "@descope/react-sdk": "^1.0.8",
     "@elastic/eui": "^60.2.0",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
