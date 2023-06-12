@@ -172,10 +172,12 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
         clearTimeout(timer);
 
         console.error("WebSocket error:", err);
-        toast.error(err, {
-          theme: "colored",
-          autoClose: 1000,
-        });
+        if (err)
+          toast.error(err, {
+            theme: "colored",
+            autoClose: 1000,
+          });
+
         if (ws?.current?.readyState === WebSocket.OPEN) {
           ws.current.close();
         }
