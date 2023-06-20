@@ -12,7 +12,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import focusedItemAtom from "../../recoil/focusedItem";
 import focusedStreamAtom from "../../recoil/focusedStream";
 import focusedContextAtom from "../../recoil/focusedContext";
-import { StatusBar } from "../UI/StatusBar/StatusBar";
+import { StatusBar, Target } from "../UI/StatusBar/StatusBar";
 import { useInterval } from "../../helpers/interval";
 import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
@@ -65,6 +65,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
   const [searchParams] = useSearchParams();
+
+  const [targets, setTargets] = useState<Target[]>([]);
 
   const entriesBuffer = useRef([] as Entry[]);
 
@@ -226,12 +228,18 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
     }
   }
 
-  const getConnectionTitle = () => {
+  const getConnectionTitle = (offline: boolean) => {
     switch (wsReadyState) {
     case WebSocket.OPEN:
-      return "streaming live traffic"
+      if (offline)
+        return "offline mode"
+      else
+        return "streaming live traffic"
     default:
-      return "streaming paused";
+      if (offline)
+        return "paused";
+      else
+        return "streaming paused";
     }
   }
 
@@ -262,7 +270,10 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
 
   return (
     <div className={TrafficViewerStyles.TrafficPage}>
-      <StatusBar />
+      <StatusBar
+        targets={targets}
+        setTargets={setTargets}
+      />
       <div className={TrafficViewerStyles.TrafficPageHeader}>
         <div className={TrafficViewerStyles.TrafficPageStreamStatus}>
           <img id="pause-icon"
@@ -278,7 +289,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
             src={playIcon}
             onClick={toggleConnection} />
           <div className={TrafficViewerStyles.connectionText}>
-            {getConnectionTitle()}
+            {getConnectionTitle(targets.length === 0)}
             {getConnectionIndicator()}
           </div>
         </div>

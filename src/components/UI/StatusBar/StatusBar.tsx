@@ -12,7 +12,7 @@ const uniqueNamespaces = (targets: Target[]) => {
   return [...new Set(targets.map(pod => `[${pod.namespace}]`))];
 }
 
-interface Target {
+export interface Target {
   name: string;
   namespace: string;
 }
@@ -53,9 +53,16 @@ const StatusBarContent: React.FC<StatusBarContentProps> = ({
   </div>;
 }
 
-export const StatusBar: React.FC = () => {
+interface StatusBarProps {
+  targets: Target[];
+  setTargets: React.Dispatch<React.SetStateAction<Target[]>>;
+}
+
+export const StatusBar: React.FC<StatusBarProps> = ({
+  targets,
+  setTargets,
+}) => {
   const [expandedBar, setExpandedBar] = useState(false);
-  const [targets, setTargets] = useState<Target[]>([]);
 
   useInterval(async () => {
     fetch(`${HubBaseUrl}/pods/targeted?refresh-token=${encodeURIComponent(getRefreshToken())}`, {
@@ -70,6 +77,6 @@ export const StatusBar: React.FC = () => {
   }, 5000, true);
 
   return <>
-    {targets && <StatusBarContent expandedBar={expandedBar} setExpandedBar={setExpandedBar} targets={targets} />}
+    {targets.length && <StatusBarContent expandedBar={expandedBar} setExpandedBar={setExpandedBar} targets={targets} />}
   </>;
 }
