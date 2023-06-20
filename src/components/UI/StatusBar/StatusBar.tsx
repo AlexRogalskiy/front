@@ -77,6 +77,6 @@ export const StatusBar: React.FC<StatusBarProps> = ({
   }, 5000, true);
 
   return <>
-    {targets.length && <StatusBarContent expandedBar={expandedBar} setExpandedBar={setExpandedBar} targets={targets} />}
+    {!!targets.length && <StatusBarContent expandedBar={expandedBar} setExpandedBar={setExpandedBar} targets={targets} />}
   </>;
 }
