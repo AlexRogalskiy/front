@@ -6,6 +6,7 @@ import { HubBaseUrl } from "../../../consts";
 import useWindowDimensions, { useTcpStreamTextsByWidth } from "../../../hooks/WindowDimensionsHook";
 import { TcpReplayDialog } from "./TcpReplayDialog";
 import { Node } from "../../EntryListItem/Entry";
+import { getSessionToken, getRefreshToken } from '@descope/react-sdk';
 
 interface EntryProps {
   index: number;
@@ -41,7 +42,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, context, worker
         >
           <a
             style={{ textDecoration: "none" }}
-            href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}?c=${encodeURIComponent(context)}`}
+            href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}?c=${encodeURIComponent(context)}&session-token=${encodeURIComponent(getSessionToken())}&refresh-token=${encodeURIComponent(getRefreshToken())}`}
           >
             <span
               style={{ color: color }}
@@ -123,7 +124,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, context, worker
           style={{
             backgroundColor: color,
           }}
-          href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}?c=${encodeURIComponent(context)}`}
+          href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}?c=${encodeURIComponent(context)}&session-token=${encodeURIComponent(getSessionToken())}&refresh-token=${encodeURIComponent(getRefreshToken())}`}
           title={`Download this ${layer4} stream in PCAP format: ${stream}`}
         >
           {downloadPcap}
