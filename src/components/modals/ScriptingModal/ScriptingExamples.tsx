@@ -184,9 +184,9 @@ function onItemCaptured(data) {
     var location = vendor.s3.put(
       env.S3_BUCKET,
       pcapPath,
-      env.AWS_REGION,
-      env.AWS_ACCESS_KEY_ID,
-      env.AWS_SECRET_ACCESS_KEY
+      env.AWS_REGION,             // optional, default: us-east-2 if can't load from default AWS config
+      env.AWS_ACCESS_KEY_ID,      // optional, default: loaded from default AWS config
+      env.AWS_SECRET_ACCESS_KEY   // optional, default: loaded from default AWS config
     );
     console.log("Uploaded PCAP to S3:", pcapPath, "URL:", location);
 
@@ -194,9 +194,9 @@ function onItemCaptured(data) {
     location = vendor.s3.put(
       env.S3_BUCKET,
       nameResolutionHistoryPath,
-      env.AWS_REGION,
-      env.AWS_ACCESS_KEY_ID,
-      env.AWS_SECRET_ACCESS_KEY
+      env.AWS_REGION,             // optional, default: us-east-2 if can't load from default AWS config
+      env.AWS_ACCESS_KEY_ID,      // optional, default: loaded from default AWS config
+      env.AWS_SECRET_ACCESS_KEY   // optional, default: loaded from default AWS config
     );
     console.log("Uploaded name resolution history to S3:", nameResolutionHistoryPath, "URL:", location);
 
@@ -233,9 +233,9 @@ function onItemCaptured(data) {
     var location = vendor.s3.put(
       env.S3_BUCKET,
       tarFile,
-      env.AWS_REGION,
-      env.AWS_ACCESS_KEY_ID,
-      env.AWS_SECRET_ACCESS_KEY
+      env.AWS_REGION,             // optional, default: us-east-2 if can't load from default AWS config
+      env.AWS_ACCESS_KEY_ID,      // optional, default: loaded from default AWS config
+      env.AWS_SECRET_ACCESS_KEY   // optional, default: loaded from default AWS config
     );
     console.log("Uploaded PCAP snapshot to S3:", tarFile, "URL:", location);
 
