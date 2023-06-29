@@ -182,8 +182,9 @@ function onItemCaptured(data) {
 
     // Upload PCAP file to S3 bucket
     var location = vendor.s3.put(
-      pcapPath,
       env.S3_BUCKET,
+      pcapPath,
+      env.AWS_REGION,
       env.AWS_ACCESS_KEY_ID,
       env.AWS_SECRET_ACCESS_KEY
     );
@@ -191,8 +192,9 @@ function onItemCaptured(data) {
 
     // Upload name resolution history to S3 bucket
     location = vendor.s3.put(
-      nameResolutionHistoryPath,
       env.S3_BUCKET,
+      nameResolutionHistoryPath,
+      env.AWS_REGION,
       env.AWS_ACCESS_KEY_ID,
       env.AWS_SECRET_ACCESS_KEY
     );
@@ -229,8 +231,9 @@ function onItemCaptured(data) {
 
     // Upload TAR file to S3 bucket
     var location = vendor.s3.put(
-      tarFile,
       env.S3_BUCKET,
+      tarFile,
+      env.AWS_REGION,
       env.AWS_ACCESS_KEY_ID,
       env.AWS_SECRET_ACCESS_KEY
     );
