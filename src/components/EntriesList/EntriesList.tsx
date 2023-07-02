@@ -53,7 +53,6 @@ export const EntriesList: React.FC<EntriesListProps> = ({
 
   const [openLicenseRequiredDialog, setOpenLicenseRequiredDialog] = React.useState(false);
   const [openLogin, setOpenLogin] = React.useState(false);
-  const [openedLoginOnce, setOpenedLoginOnce] = React.useState(false);
   const [openUnauthorizedDialog, setOpenUnauthorizedDialog] = React.useState(false);
 
   const { user } = useUser();
@@ -94,13 +93,9 @@ export const EntriesList: React.FC<EntriesListProps> = ({
           break;
         case 403:
           setOpenLogin(true);
-          setOpenedLoginOnce(true);
           break;
         case 401:
-          if (openedLoginOnce)
-            setOpenUnauthorizedDialog(true);
-          else
-            setOpenLogin(true);
+          setOpenUnauthorizedDialog(true);
           break;
         default:
           setOpenLogin(false);
