@@ -131,7 +131,7 @@ function TabPanel(props: TabPanelProps) {
           onSubmit={handleSubmit}
           style={{ width: '100%', height: "100%" }}
         >
-          <Box sx={{ p: 3, height: "100%" }}>
+          <Box sx={{ p: 3, height: "100%", boxSizing: "border-box" }}>
             <TextField
               variant="standard"
               defaultValue={title}
@@ -178,28 +178,30 @@ function TabPanel(props: TabPanelProps) {
                 }}
               />
             </div>
-            <Typography noWrap={true}>
-              Write your <Link href="https://262.ecma-international.org/5.1/" underline="hover" target="_blank"><b>JavaScript ES5</b></Link> code inside the hooks.&nbsp;
-              <a className="kbc-button kbc-button-xs">Ctrl</a> + <a className="kbc-button kbc-button-xs">S</a> saves the script.&nbsp;
-              <a className="kbc-button kbc-button-xs" onClick={() => { setFollow(false) }}>Left-Click</a> in the console stops auto-scroll.&nbsp;
-              <a className="kbc-button kbc-button-xs" onClick={() => { setFollow(true) }}>Page Down</a> resumes it.&nbsp;
-              See <Link href="https://docs.kubeshark.co/en/automation_scripting" underline="hover" target="_blank"><b>scripting documentation</b></Link> for more info.
-            </Typography>
-            <Button
-              variant="contained"
-              onClick={handleClickSaveScript}
-              style={{ margin: 10 }}
-            >
-              Save
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleClickDeleteScript}
-              color="error"
-              style={{ margin: 10, marginLeft: 24 }}
-            >
-              Delete
-            </Button>
+            <div style={{boxSizing: "border-box"}}>
+              <Typography noWrap={true}>
+                Write your <Link href="https://262.ecma-international.org/5.1/" underline="hover" target="_blank"><b>JavaScript ES5</b></Link> code inside the hooks.&nbsp;
+                <a className="kbc-button kbc-button-xs">Ctrl</a> + <a className="kbc-button kbc-button-xs">S</a> saves the script.&nbsp;
+                <a className="kbc-button kbc-button-xs" onClick={() => { setFollow(false) }}>Left-Click</a> in the console stops auto-scroll.&nbsp;
+                <a className="kbc-button kbc-button-xs" onClick={() => { setFollow(true) }}>Page Down</a> resumes it.&nbsp;
+                See <Link href="https://docs.kubeshark.co/en/automation_scripting" underline="hover" target="_blank"><b>scripting documentation</b></Link> for more info.
+              </Typography>
+              <Button
+                variant="contained"
+                onClick={handleClickSaveScript}
+                style={{ margin: 0 }}
+              >
+                Save
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleClickDeleteScript}
+                color="error"
+                style={{ margin: 0, marginLeft: 24 }}
+              >
+                Delete
+              </Button>
+            </div>
           </Box>
         </form>
       </div>}
@@ -356,7 +358,7 @@ export const ScriptingModal: React.FC<ScriptingModalProps> = ({ isOpen, onClose 
                   </Button>
                 </Tabs>
                 <Grid container spacing={2} style={{ height: "100%", width: "80%", marginTop: "0px" }}>
-                  <Grid item xs={12} style={{ height: "70%", overflow: "hidden", paddingTop: "0px" }}>
+                  <Grid item xs={12} style={{ height: "70%", overflow: "auto", paddingTop: "0px" }}>
                     {
                       Object.keys(scriptMap).map(function(key: string, i: number) {
                         return <TabPanel
